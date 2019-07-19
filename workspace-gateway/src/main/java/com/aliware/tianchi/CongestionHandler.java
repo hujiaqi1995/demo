@@ -10,8 +10,8 @@ import org.apache.dubbo.common.URL;
  */
 public class CongestionHandler {
     // TODO delta可设置为不同机器配置性能 有不一样的数值
-    private static final int DELTA = 50;
-    private static final double FACTOR = 0.85;
+    private static final int DELTA = 60;  // 默认60
+    private static final double FACTOR = 0.875;  // 默认0.875
 
     URL url;
     int oldActiveTask;
@@ -20,7 +20,7 @@ public class CongestionHandler {
     double oldDelay;
     double delay;
 
-    int maxActiveTask = 200;
+    int maxActiveTask = 250;   // 可以修改，对性能有影响  默认200
     int minActiveTask = 1;
 
     public CongestionHandler(URL url) {

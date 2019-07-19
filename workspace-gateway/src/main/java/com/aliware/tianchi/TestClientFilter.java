@@ -23,7 +23,7 @@ import org.apache.dubbo.rpc.RpcStatus;
 
 /**
  * @author daofeng.xjf
- *
+ * <p>
  * 客户端过滤器
  * 可选接口
  * 用户可以在客户端拦截请求和响应,捕获 rpc 调用时产生、服务端返回的已知异常。
@@ -33,13 +33,13 @@ public class TestClientFilter implements Filter {
 
     private ConcurrentHashMap<Invoker, ConcurrentLinkedQueue<Integer>> timeQueue1;
     private ConcurrentHashMap<Invoker, ConcurrentLinkedQueue<Integer>> timeQueue2;
-    private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,new NamedThreadFactory("TestClientFilter-Config-Refresher"));
+    private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory("TestClientFilter-Config-Refresher"));
 
 
     public TestClientFilter() {
         timeQueue1 = new ConcurrentHashMap<>();
         timeQueue2 = new ConcurrentHashMap<>();
-        executorService.scheduleAtFixedRate(new MonitorTask(),1000,200,TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(new MonitorTask(), 1000, 150, TimeUnit.MILLISECONDS);
         updateMaxPool();
     }
 
@@ -59,7 +59,6 @@ public class TestClientFilter implements Filter {
             // 调用异常
             throw e;
         }
-
     }
 
     @Override
@@ -78,7 +77,7 @@ public class TestClientFilter implements Filter {
                 timeQueue1.putIfAbsent(invoker, new ConcurrentLinkedQueue<>());
                 queue = timeQueue1.get(invoker);
             }
-            queue.offer((int)(System.currentTimeMillis() - start));
+            queue.offer((int) (System.currentTimeMillis() - start));
         }
         RpcStatus.endCount(url, methodName, 0, isSuccess);
         return result;
@@ -127,8 +126,8 @@ public class TestClientFilter implements Filter {
                     sum += t;
                     count += 1;
                 }
-                avgMap.put(key, (double)sum / count);
-                avgMap2.put(item.getKey(), (double)sum / count);
+                avgMap.put(key, (double) sum / count);
+                avgMap2.put(item.getKey(), (double) sum / count);
             }
             if (avgMap.isEmpty()) {
                 return;
@@ -142,7 +141,7 @@ public class TestClientFilter implements Filter {
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, Double> item : map.entrySet()) {
                 sb.append(String.format("%6s: %5.1fms ", item.getKey(),
-                    item.getValue()));
+                        item.getValue()));
             }
             return sb.toString();
         }
