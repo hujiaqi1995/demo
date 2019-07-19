@@ -10,8 +10,8 @@ import org.apache.dubbo.common.URL;
  */
 public class CongestionHandler {
     // TODO delta可设置为不同机器配置性能 有不一样的数值
-    private static final int DELTA = 60;
-    private static final double FACTOR = 0.875;
+    private static final int DELTA = 50;
+    private static final double FACTOR = 0.85;
 
     URL url;
     int oldActiveTask;
@@ -30,10 +30,10 @@ public class CongestionHandler {
     }
 
     private double computeNDG() {
-        if (delay < oldDelay) {
-            return delay - oldDelay;
+        double abs = delay - oldDelay;
+        if (abs < 0) {
+            return abs;
         }
-        double abs = Math.abs(delay - oldDelay);
         if (abs < 2.5) {
             return -abs;
         } else {
